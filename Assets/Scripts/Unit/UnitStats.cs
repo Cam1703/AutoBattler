@@ -10,6 +10,7 @@ public class UnitStats : ScriptableObject
     [SerializeField] float defense = 0f;
     [SerializeField] UnitType unitType = UnitType.Tank;
     [SerializeField] Sprite sprite;
+    [SerializeField] UnitFaction unitFaction = UnitFaction.Player;
 
     public string UnitName { get => unitName; set => unitName = value; }
     public float MaxHP { get => maxHP; set => maxHP = value; }
@@ -18,6 +19,7 @@ public class UnitStats : ScriptableObject
     public float Defense { get => defense; set => defense = value; }
     public UnitType UnitType { get => unitType; set => unitType = value; }
     public Sprite Sprite { get => sprite; set => sprite = value; }
+    public UnitFaction UnitFaction { get => unitFaction; set => unitFaction = value; }
 }
 
 public enum UnitType
@@ -25,4 +27,18 @@ public enum UnitType
     Ranged,
     Magic,
     Tank
+}
+
+public enum UnitState
+{
+    Idle,
+    Attacking,
+    Moving,
+    Dead
+}
+
+public enum UnitFaction
+{
+    Player,
+    Enemy
 }

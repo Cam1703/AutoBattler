@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 081cd6cce7644df4b881694d894c94f6, type: 3}
+  m_Name: TankUnit 1
+  m_EditorClassIdentifier: 
+  unitName: Player
+  maxHP: 100
+  attackDamage: 12
+  attackSpeed: 0.8
+  defense: 4
+  unitType: 2
+  sprite: {fileID: -7798491115942441699, guid: 50eb3e3944fae28429e4140d8ecc27b2, type: 3}
+  unitFaction: 0

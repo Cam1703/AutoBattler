@@ -1,33 +1,76 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class AutoBattler : MonoBehaviour
 {
-    [SerializeField] Unit player;
-    [SerializeField] Unit enemy;
+    [SerializeField] List<Unit> playerUnits;
+    [SerializeField] List<Unit> enemyUnits;
 
     void Update()
     {
-        if (player.IsDead || enemy.IsDead)
+        // Remove dead units from lists
+        playerUnits = playerUnits.Where(u => u != null && !u.IsDead).ToList();
+        enemyUnits = enemyUnits.Where(u => u != null && !u.IsDead).ToList();
+
+        if (playerUnits.Count == 0 || enemyUnits.Count == 0)
         {
             EndBattle();
             return;
         }
 
-        player.TickCooldown(Time.deltaTime);
-        enemy.TickCooldown(Time.deltaTime);
+        // Player attacks
+        foreach (var player in playerUnits)
+        {
+            player.TickCooldown(Time.deltaTime);
 
-        if (player.CanAttack())
-            player.Attack(enemy);
+            if (player.CanAttack())
+            {
+                Unit closestEnemy = FindClosestTarget(player, enemyUnits);
+                if (closestEnemy != null)
+                    player.Attack(closestEnemy);
+            }
+        }
 
-        if (enemy.CanAttack())
-            enemy.Attack(player);
+        // Enemy attacks
+        foreach (var enemy in enemyUnits)
+        {
+            enemy.TickCooldown(Time.deltaTime);
+
+            if (enemy.CanAttack())
+            {
+                Unit closestPlayer = FindClosestTarget(enemy, playerUnits);
+                if (closestPlayer != null)
+                    enemy.Attack(closestPlayer);
+            }
+        }
+    }
+
+    Unit FindClosestTarget(Unit attacker, List<Unit> potentialTargets)
+    {
+        Unit closest = null;
+        float minDistance = Mathf.Infinity;
+
+        foreach (var target in potentialTargets)
+        {
+            if (target == null || target.IsDead) continue;
+
+            float dist = Vector2.Distance(attacker.transform.position, target.transform.position);
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = target;
+            }
+        }
+
+        return closest;
     }
 
     void EndBattle()
     {
-        if (player.IsDead)
+        if (playerUnits.Count == 0)
             Debug.Log("Jugador perdió");
-        else if (enemy.IsDead)
+        else if (enemyUnits.Count == 0)
             Debug.Log("Jugador ganó");
     }
 }

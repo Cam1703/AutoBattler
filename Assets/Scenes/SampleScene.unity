@@ -326,6 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 9d65ed07757585d4c98319e8e613a8e1, type: 2}
+  equippedItems: []
 --- !u!212 &197637971
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -390,7 +391,7 @@ Transform:
   m_GameObject: {fileID: 197637969}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.22, y: 0.26, z: 0}
+  m_LocalPosition: {x: 6.22, y: -0.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -957,6 +958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 9d65ed07757585d4c98319e8e613a8e1, type: 2}
+  equippedItems: []
 --- !u!212 &317813730
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2437,6 +2439,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: d53b64f5bc382a44b95d8dc30014be44, type: 2}
+  equippedItems:
+  - {fileID: 11400000, guid: 7ce2b769dffb75d42a445ffd80bf3135, type: 2}
 --- !u!212 &874155692
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2716,6 +2720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: d53b64f5bc382a44b95d8dc30014be44, type: 2}
+  equippedItems: []
 --- !u!212 &1148203259
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2920,6 +2925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: ca5f497a4f82b3c46a7d484f12d91459, type: 2}
+  equippedItems: []
 --- !u!212 &1371073054
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3271,6 +3277,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 3f2b61ed5fc665a4589dfb9c94d2f896, type: 2}
+  equippedItems:
+  - {fileID: 11400000, guid: ccac9f1f4b64e4b43a414045bb89719a, type: 2}
+  - {fileID: 11400000, guid: ccac9f1f4b64e4b43a414045bb89719a, type: 2}
+  - {fileID: 11400000, guid: ccac9f1f4b64e4b43a414045bb89719a, type: 2}
+  - {fileID: 11400000, guid: ccac9f1f4b64e4b43a414045bb89719a, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

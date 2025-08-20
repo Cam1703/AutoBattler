@@ -9,7 +9,7 @@ public class AutoBattler : MonoBehaviour
 
     void Update()
     {
-        // Remove dead units from lists
+        // Remover unidades muertas
         playerUnits = playerUnits.Where(u => u != null && !u.IsDead).ToList();
         enemyUnits = enemyUnits.Where(u => u != null && !u.IsDead).ToList();
 
@@ -19,7 +19,7 @@ public class AutoBattler : MonoBehaviour
             return;
         }
 
-        // Player attacks
+        // Ataques de jugadores
         foreach (var player in playerUnits)
         {
             player.TickCooldown(Time.deltaTime);
@@ -32,7 +32,7 @@ public class AutoBattler : MonoBehaviour
             }
         }
 
-        // Enemy attacks
+        // Ataques de enemigos
         foreach (var enemy in enemyUnits)
         {
             enemy.TickCooldown(Time.deltaTime);

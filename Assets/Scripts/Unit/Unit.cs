@@ -1,34 +1,45 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
     [SerializeField] UnitStats stats;
+    [SerializeField] List<ItemSO> equippedItems = new List<ItemSO>(); // los ítems equipados
+
+    private float maxHP;
     private float currentHP;
     private float attackCooldown;
+    private float attackDamage;
+    private float attackSpeed;
+    private float defense;
+
     private SpriteRenderer spriteRenderer;
+
     private TMP_Text hpText;
     private TMP_Text cooldownText;
+
     private Coroutine attackCoroutine;
+
+
     public bool IsDead => currentHP <= 0;
 
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = stats.Sprite;
-        currentHP = stats.MaxHP;
-        attackCooldown = 1f / stats.AttackSpeed; // Inicializa el cooldown de ataque 
         hpText = transform.Find("HPText").GetComponent<TMP_Text>();
         cooldownText = transform.Find("CooldownText").GetComponent<TMP_Text>();
-        spriteRenderer.flipX = stats.UnitFaction == UnitFaction.Enemy ? true : false; 
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        InitializeStats();
+        InitializeSprite();
         UpdateHPText();
     }
 
-    public void ReceiveDamage(float amount)
+    public void ReceiveDamage(float amount, float defense)
     {
-        currentHP -= amount;
+        currentHP -= amount + defense;
         if (currentHP < 0) currentHP = 0;
         UpdateSpriteColor();
         UpdateHPText();
@@ -42,8 +53,8 @@ public class Unit : MonoBehaviour
 
     public void Attack(Unit target)
     {
-        target.ReceiveDamage(stats.AttackDamage);
-        attackCooldown = 1f / stats.AttackSpeed; // tiempo entre ataques
+        target.ReceiveDamage(attackDamage, target.defense);
+        attackCooldown = 1f / attackSpeed; // tiempo entre ataques
         AttackMockAnimation(); // Llama a la animación de ataque
     }
 
@@ -83,7 +94,7 @@ public class Unit : MonoBehaviour
 
     private void UpdateHPText()
     {
-        hpText.text = $"HP: {currentHP}/{stats.MaxHP}";
+        hpText.text = $"HP: {currentHP}/{maxHP}";
         hpText.color = IsDead ? Color.gray : Color.white; // Cambia el color del texto si está muerto
     }
 
@@ -115,6 +126,24 @@ public class Unit : MonoBehaviour
         }
 
         transform.position = startPosition; // Volver al punto inicial
+    }
+
+    private void InitializeStats()
+    {
+        maxHP = stats.MaxHP + (equippedItems?.Sum(item => item.Hp) ?? 0f);
+        currentHP = maxHP;
+
+        defense = stats.Defense + (equippedItems?.Sum(item => item.Defense) ?? 0f);
+
+        attackSpeed = stats.AttackSpeed + (equippedItems?.Sum(item => item.AttackSpeed) ?? 0f);
+        attackDamage = stats.AttackDamage + (equippedItems?.Sum(item => item.Attack) ?? 0f);
+        attackCooldown = attackSpeed > 0 ? 1f / attackSpeed : float.MaxValue; // evitar división por cero
+    }
+
+    private void InitializeSprite()
+    {
+        spriteRenderer.sprite = stats.Sprite;
+        spriteRenderer.flipX = stats.UnitFaction == UnitFaction.Enemy ? true : false;
     }
 
 

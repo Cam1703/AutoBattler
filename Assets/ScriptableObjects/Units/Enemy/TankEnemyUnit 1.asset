@@ -17,6 +17,8 @@ MonoBehaviour:
   attackDamage: 10
   attackSpeed: 0.4
   defense: 4
-  unitType: 2
+  unitType: 1
   sprite: {fileID: -6451113446593688513, guid: d6c7943f3a3505d41a24de8effb72555, type: 3}
   unitFaction: 1
+  givesXP: 1
+  xpValue: 10

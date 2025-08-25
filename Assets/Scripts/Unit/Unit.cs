@@ -7,7 +7,8 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     [SerializeField] UnitStats stats;
-    [SerializeField] List<ItemSO> equippedItems = new List<ItemSO>(); // los ítems equipados
+    [SerializeField] List<ItemSO> equippedItems = new List<ItemSO>(); 
+    private UnitIUIHandler uiHandler;
 
     private float maxHP;
     private float currentHP;
@@ -15,26 +16,31 @@ public class Unit : MonoBehaviour
     private float attackDamage;
     private float attackSpeed;
     private float defense;
+    [SerializeField] int level = 1; 
 
     private SpriteRenderer spriteRenderer;
 
-    private TMP_Text hpText;
-    private TMP_Text cooldownText;
 
     private Coroutine attackCoroutine;
-
-
     public bool IsDead => currentHP <= 0;
+
+    public List<ItemSO> EquippedItems { get => equippedItems; set => equippedItems = value; }
 
     void Awake()
     {
-        hpText = transform.Find("HPText").GetComponent<TMP_Text>();
-        cooldownText = transform.Find("CooldownText").GetComponent<TMP_Text>();
+
         spriteRenderer = GetComponent<SpriteRenderer>();
+        uiHandler = GetComponent<UnitIUIHandler>();
 
         InitializeStats();
         InitializeSprite();
-        UpdateHPText();
+    }
+
+    private void Start()
+    {
+        uiHandler.UpdateCooldown(attackCooldown);
+        uiHandler.UpdateHPText(currentHP, maxHP, IsDead);
+        uiHandler.UpdateLevelText(level);
     }
 
     public void ReceiveDamage(float amount, float defense)
@@ -42,8 +48,8 @@ public class Unit : MonoBehaviour
         currentHP -= amount + defense;
         if (currentHP < 0) currentHP = 0;
         UpdateSpriteColor();
-        UpdateHPText();
-
+        uiHandler.UpdateHPText(currentHP, maxHP, IsDead);
+        uiHandler.UpdateLevelText(level);
     }
 
     public bool CanAttack()
@@ -61,13 +67,15 @@ public class Unit : MonoBehaviour
     public void TickCooldown(float deltaTime)
     {
         if (attackCooldown > 0) attackCooldown -= deltaTime;
-        UpdateCooldown();
+        uiHandler.UpdateCooldown(attackCooldown);
     }
 
     public IEnumerator WaitForSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);
     }
+
+
 
     private void UpdateSpriteColor()
     {
@@ -92,16 +100,6 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void UpdateHPText()
-    {
-        hpText.text = $"HP: {currentHP}/{maxHP}";
-        hpText.color = IsDead ? Color.gray : Color.white; // Cambia el color del texto si está muerto
-    }
-
-    private void UpdateCooldown()
-    {
-        cooldownText.text = $"{attackCooldown:F1}s";
-    }
 
 
     private void AttackMockAnimation()
@@ -130,13 +128,13 @@ public class Unit : MonoBehaviour
 
     private void InitializeStats()
     {
-        maxHP = stats.MaxHP + (equippedItems?.Sum(item => item.Hp) ?? 0f);
+        maxHP = stats.MaxHP + (equippedItems?.Sum(item => item.Hp) ?? 0f) + LevelBonus()["maxHP"];
         currentHP = maxHP;
 
-        defense = stats.Defense + (equippedItems?.Sum(item => item.Defense) ?? 0f);
+        defense = stats.Defense + (equippedItems?.Sum(item => item.Defense) ?? 0f) + LevelBonus()["defense"];
 
         attackSpeed = stats.AttackSpeed + (equippedItems?.Sum(item => item.AttackSpeed) ?? 0f);
-        attackDamage = stats.AttackDamage + (equippedItems?.Sum(item => item.Attack) ?? 0f);
+        attackDamage = stats.AttackDamage + (equippedItems?.Sum(item => item.Attack) ?? 0f) + LevelBonus()["attack"];
         attackCooldown = attackSpeed > 0 ? 1f / attackSpeed : float.MaxValue; // evitar división por cero
     }
 
@@ -146,5 +144,51 @@ public class Unit : MonoBehaviour
         spriteRenderer.flipX = stats.UnitFaction == UnitFaction.Enemy ? true : false;
     }
 
+    public void LevelUP()
+    {
+        level++;
+        InitializeStats(); 
+        uiHandler.UpdateHPText(currentHP, maxHP, IsDead);
+        uiHandler.UpdateLevelText(level);
+    }
 
+    public Dictionary<string, float> LevelBonus()
+    {
+        float levelBonusAttack = 0f;
+        float levelBonusDefense = 0f;
+        float levelBonusMaxHP = 0f;
+
+        switch (stats.UnitType)
+        {
+            case UnitType.Ranged:
+                levelBonusAttack = level * 0.5f;
+                levelBonusDefense = level * 0.2f;
+                levelBonusMaxHP = level * 1f;
+                break;
+
+            case UnitType.Tank:
+                levelBonusAttack = level * 0.3f;
+                levelBonusDefense = level * 0.5f;
+                levelBonusMaxHP = level * 2f;
+                break;
+
+            default:
+                Debug.LogWarning($"Unit type {stats.UnitType} not recognized for level bonuses.");
+                break;
+        }
+
+        return new Dictionary<string, float>
+        {
+            { "attack", attackDamage + levelBonusAttack },
+            { "defense", defense + levelBonusDefense },
+            { "maxHP", maxHP + levelBonusMaxHP }
+        };
+    }
+
+    private void OnMouseDown()
+    {
+        Debug.Log($"Unit {stats.UnitName} clicked. Level: {level}, HP: {currentHP}/{maxHP} - Attack: {attackDamage}, Defense: {defense}, Attack Speed: {attackSpeed}");
+    }
 }
+
+

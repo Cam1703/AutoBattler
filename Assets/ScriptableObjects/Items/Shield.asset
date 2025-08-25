@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30c18c90bbbb4e5479067822e2fd2847, type: 3}
-  m_Name: Sword
+  m_Name: Shield
   m_EditorClassIdentifier: 
-  itemName: Sword
-  attack: 1
-  attackSpeed: 0.2
-  hp: 0
-  defense: 0
-  sprite: {fileID: -3976831090436365287, guid: 46a70f880e2b0994ab2d314358ff2a61, type: 3}
-  itemType: 0
-  itemRarity: 0
+  itemName: Shield
+  attack: 0
+  attackSpeed: 0
+  hp: 20
+  defense: 2
+  sprite: {fileID: 4951955078627671092, guid: 46a70f880e2b0994ab2d314358ff2a61, type: 3}
+  itemType: 1
+  itemRarity: 2

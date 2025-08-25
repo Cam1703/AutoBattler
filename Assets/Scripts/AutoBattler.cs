@@ -6,6 +6,7 @@ public class AutoBattler : MonoBehaviour
 {
     [SerializeField] List<Unit> playerUnits;
     [SerializeField] List<Unit> enemyUnits;
+    private bool battleEnded = false;
 
     void Update()
     {
@@ -68,9 +69,17 @@ public class AutoBattler : MonoBehaviour
 
     void EndBattle()
     {
+        if (battleEnded) return; // Evitar múltiples llamadas
+        battleEnded = true;
+
         if (playerUnits.Count == 0)
             Debug.Log("Jugador perdió");
-        else if (enemyUnits.Count == 0)
+        else if (enemyUnits.Count == 0){
             Debug.Log("Jugador ganó");
+            foreach (var unit in playerUnits)
+            {
+                unit.LevelUP(); // Subir de nivel a las unidades del jugador
+            }
+        }
     }
 }

@@ -11,6 +11,8 @@ public class UnitStats : ScriptableObject
     [SerializeField] UnitType unitType = UnitType.Tank;
     [SerializeField] Sprite sprite;
     [SerializeField] UnitFaction unitFaction = UnitFaction.Player;
+    [SerializeField] bool givesXP = true;
+    [SerializeField] int xpValue = 10;
 
     public string UnitName { get => unitName; set => unitName = value; }
     public float MaxHP { get => maxHP; set => maxHP = value; }
@@ -20,12 +22,13 @@ public class UnitStats : ScriptableObject
     public UnitType UnitType { get => unitType; set => unitType = value; }
     public Sprite Sprite { get => sprite; set => sprite = value; }
     public UnitFaction UnitFaction { get => unitFaction; set => unitFaction = value; }
+    public bool GivesXP { get => givesXP; set => givesXP = value; }
+    public int XpValue { get => xpValue; set => xpValue = value; }
 }
 
 public enum UnitType
 {
     Ranged,
-    Magic,
     Tank
 }
 
